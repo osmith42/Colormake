@@ -107,6 +107,10 @@ while (<>)
 			$skip = 2;
 		}
 	}
+	elsif (index($thisline, "/usr/bin/ttcn3_compiler") != -1)
+	{
+		$in = 'ttcn3';
+	}
 	elsif ($thisline =~ s/^\#/$col_comment#$1/x)
 	{
 		$in = 'comment';
@@ -115,7 +119,11 @@ while (<>)
 	{
 		$in = $1;
 	}
-	elsif ($in eq 'gcc'
+	elsif ($in eq 'ttcn3' && $thisline =~ /^Notify:/)
+	{
+		# Boring TTCN3 lines, do not colorize
+	}
+	elsif (($in eq 'gcc' or $in eq 'ttcn3')
 		&& $thisline !~ /^mv\W/
 		)
 	{
